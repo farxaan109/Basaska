@@ -5,108 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AL XIKMA - BASASKA</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f7f6; margin: 0; }
-        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 350px; text-align: center; border-top: 5px solid #007bff; }
-        h2 { color: #2c3e50; margin-bottom: 5px; }
-        select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .submit-btn { background-color: #007bff; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-size: 17px; font-weight: bold; }
-        .submit-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
-        #status { margin-top: 15px; font-weight: bold; font-size: 13px; }
-        #successOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 123, 255, 0.98); color: white; z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .container { background: white; padding: 35px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; border-top: 6px solid #007bff; position: relative; }
+        h2 { color: #1a73e8; margin-bottom: 5px; text-transform: uppercase; font-size: 22px; }
+        p.subtitle { color: #5f6368; margin-bottom: 25px; font-size: 14px; font-weight: 500; }
+        select, input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #e8eaed; border-radius: 12px; font-size: 16px; box-sizing: border-box; transition: 0.3s; background-color: #f8f9fa; }
+        select:focus, input:focus { border-color: #007bff; outline: none; background-color: #fff; }
+        .submit-btn { background-color: #007bff; color: white; padding: 16px; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; transition: 0.3s; margin-top: 10px; }
+        .submit-btn:hover:not(:disabled) { background-color: #0056b3; transform: translateY(-2px); }
+        .submit-btn:disabled { background-color: #dadce0; cursor: not-allowed; }
+        #status { margin-top: 18px; font-weight: 600; font-size: 14px; padding: 8px; border-radius: 8px; }
+        #successOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 115, 232, 0.98); color: white; z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div id="successOverlay">
-    <h1 style="font-size: 50px;">✅</h1>
+    <div style="font-size: 60px; margin-bottom: 20px;">GUUL</div>
     <h1 id="successTitle">MAHADSANID!</h1>
-    <p id="successBody" style="font-size: 20px;"></p>
-    <button onclick="location.reload()" style="background: white; color: #007bff; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">DIB U NOQO</button>
+    <p id="successBody" style="font-size: 18px; line-height: 1.5;"></p>
+    <button onclick="location.reload()" style="background: white; color: #1a73e8; padding: 12px 30px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 25px;">DIB U NOQO</button>
 </div>
 
 <div class="container" id="mainContainer">
     <h2 id="schName">AL XIKMA SCHOOL</h2>
-    <p style="color: #666;">Is-xaadirinta Darawalada</p>
+    <p class="subtitle">Nidaamka Is-xaadirinta Darawalada</p>
 
     <select id="nameSelect"><option value="">-- Sugaya Magacyada... --</option></select>
     <select id="shiftSelect">
         <option value="">-- Dooro Xaaladda --</option>
-        <option value="subax Imaansho">Subax Imaansho</option>
-        <option value="rawixitaan Subax">Rawixitaan Subax</option>
-        <option value="galab Imaansho">Galab Imaansho</option>
-        <option value="rawixitaan Galab">Rawixitaan Galab</option>
+        <option value="Subax Imaansho">Subax Imaansho</option>
+        <option value="Rawixitaan Subax">Rawixitaan Subax</option>
+        <option value="Galab Imaansho">Galab Imaansho</option>
+        <option value="Rawixitaan Galab">Rawixitaan Galab</option>
     </select>
-    <input type="password" id="passInput" placeholder="Password-kaaga">
-    <button id="submitBtn" class="submit-btn" disabled>Hubinta GPS...</button>
-    <div id="status">Raadinaya goobta aad joogto...</div>
+    <input type="password" id="passInput" placeholder="Geli Password-ka">
+    
+    <button id="submitBtn" class="submit-btn" disabled>
+        <span id="btnText">Hubinta GPS...</span>
+    </button>
+    
+    <div id="status">Raadinaya goobta...</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://xaadirinta-dareewalada-default-rtdb.firebaseio.com" };
+    // Config-ga Firebase
+    const firebaseConfig = { 
+        databaseURL: "https://xaadirinta-dareewalada-default-rtdb.firebaseio.com" 
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     let SETTINGS = {};
     let DRIVER_DB = {};
 
-    // 1. Akhriso Settings-ka (GPS & Magaca)
+    // 1. Akhriso Settings-ka
     db.ref('settings_bus').on('value', (snap) => {
         SETTINGS = snap.val() || {};
-        document.getElementById('schName').innerText = SETTINGS.school_name || "AL XIKMA SCHOOL";
+        if (SETTINGS.school_name) {
+            document.getElementById('schName').innerText = SETTINGS.school_name;
+        }
     });
 
-    // 2. Akhriso Magacyada
+    // 2. Akhriso Liiska Darawalada
     db.ref('staff_list').on('value', (snap) => {
         DRIVER_DB = snap.val() || {};
         const nameSelect = document.getElementById('nameSelect');
         nameSelect.innerHTML = '<option value="">-- Dooro Magacaaga --</option>';
         for (let n in DRIVER_DB) {
             let opt = document.createElement('option');
-            opt.value = n; opt.text = n; nameSelect.appendChild(opt);
+            opt.value = n; opt.text = n; 
+            nameSelect.appendChild(opt);
         }
     });
 
-    // 3. GPS & Location
-    navigator.geolocation.watchPosition((pos) => {
-        const R = 6371;
-        const lat1 = pos.coords.latitude, lon1 = pos.coords.longitude;
-        const dLat = (SETTINGS.lat - lat1) * Math.PI / 180;
-        const dLon = (SETTINGS.lon - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(SETTINGS.lat*Math.PI/180) * Math.sin(dLon/2)**2;
-        const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    // 3. GPS Tracker
+    const btn = document.getElementById('submitBtn');
+    const st = document.getElementById('status');
 
-        const btn = document.getElementById('submitBtn');
-        const st = document.getElementById('status');
+    if ("geolocation" in navigator) {
+        navigator.geolocation.watchPosition((pos) => {
+            const R = 6371; // Dhulka gacankiisa (km)
+            const lat1 = pos.coords.latitude, lon1 = pos.coords.longitude;
+            
+            // Haddii SETTINGS aysan weli soo ramin, isticmaal 0
+            const targetLat = SETTINGS.lat || 0;
+            const targetLon = SETTINGS.lon || 0;
+            const radius = SETTINGS.radius || 0.2;
 
-        if (dist <= (SETTINGS.radius || 0.2)) {
-            btn.disabled = false; btn.innerText = "IS-XAADIRI";
-            st.innerHTML = "<span style='color: green;'>✅ Goobta waa sax.</span>";
-        } else {
-            btn.disabled = true;
-            st.innerHTML = "<span style='color: red;'>❌ Ma joogtid iskuulka (" + (dist*1000).toFixed(0) + "m).</span>";
-        }
-    }, null, { enableHighAccuracy: true });
+            const dLat = (targetLat - lat1) * Math.PI / 180;
+            const dLon = (targetLon - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(targetLat*Math.PI/180) * Math.sin(dLon/2)**2;
+            const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-    // 4. Dirista
-    document.getElementById('submitBtn').addEventListener('click', () => {
+            if (dist <= radius) {
+                btn.disabled = false;
+                document.getElementById('btnText').innerText = "IS-XAADIRI";
+                st.innerHTML = "<span style='color: #28a745;'>Goobta waa sax (Gudaha Iskuulka)</span>";
+                st.style.backgroundColor = "#e6f4ea";
+            } else {
+                btn.disabled = true;
+                document.getElementById('btnText').innerText = "Amni ahaan waa xiran tahay";
+                st.innerHTML = "<span style='color: #d93025;'>Ma joogtid iskuulka (" + (dist*1000).toFixed(0) + "m)</span>";
+                st.style.backgroundColor = "#fce8e6";
+            }
+        }, (err) => {
+            st.innerHTML = "<span style='color: #d93025;'>Fadlan shid GPS-ka taleefanka</span>";
+        }, { enableHighAccuracy: true });
+    }
+
+    // 4. Dirista Xogta
+    btn.addEventListener('click', () => {
         const name = document.getElementById('nameSelect').value;
         const shift = document.getElementById('shiftSelect').value;
         const pass = document.getElementById('passInput').value;
 
-        if (!name || !shift || !pass) return alert("Buuxi dhamaan!");
-        if (!DRIVER_DB[name] || DRIVER_DB[name].pass !== pass) return alert("Password khaldan!");
+        if (!name || !shift || !pass) {
+            alert("Fadlan buuxi dhamaan meelaha banaan!");
+            return;
+        }
+
+        if (!DRIVER_DB[name] || DRIVER_DB[name].pass !== pass) {
+            alert("Password-ka aad gelisay waa khalad!");
+            return;
+        }
+
+        // Muuji animation-ka dirista
+        btn.disabled = true;
+        document.getElementById('btnText').innerHTML = '<div class="loader"></div> Diraya...';
 
         db.ref('drivers').push({
-            name: name, shift: shift,
-            email: DRIVER_DB[name].email,
+            name: name, 
+            shift: shift,
+            email: DRIVER_DB[name].email || "",
             time: firebase.database.ServerValue.TIMESTAMP
         }).then(() => {
-            document.getElementById('successBody').innerHTML = "Darawal <b>" + name + "</b>, waad ku mahadsantahay is-xaadirinta.";
+            document.getElementById('successBody').innerHTML = "Darawal <b>" + name + "</b>,<br>Xogtaada si guul leh ayaa loo diwaangeliyey.";
             document.getElementById('successOverlay').style.display = "flex";
-            setTimeout(() => { location.reload(); }, 10000);
+            // Dib u bilaabo bogga 8 ilbiriqsi ka dib
+            setTimeout(() => { location.reload(); }, 8000);
+        }).catch((error) => {
+            alert("Cilad ayaa dhacday: " + error.message);
+            location.reload();
         });
     });
 </script>
