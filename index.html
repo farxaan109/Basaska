@@ -3,112 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AL XIKMA - BASASKA</title>
+    <title>AL XIKMA SCHOOL - Attendance</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f7f6; margin: 0; }
-        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 350px; text-align: center; border-top: 5px solid #007bff; }
-        h2 { color: #2c3e50; margin-bottom: 5px; }
+        /* Midabka dhabarka (Background) oo cagaar khafif ah */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); 
+            margin: 0; 
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+            width: 350px; 
+            text-align: center; 
+            border-top: 6px solid #2e7d32;
+        }
+        /* Style-ka Logada */
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+        }
+        h2 { color: #2c3e50; border-bottom: 2px solid #28a745; display: inline-block; padding-bottom: 5px; margin-top: 0; }
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .submit-btn { background-color: #007bff; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-size: 17px; font-weight: bold; }
-        .submit-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
-        #status { margin-top: 15px; font-weight: bold; font-size: 13px; }
-        #successOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 123, 255, 0.98); color: white; z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .submit-btn { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-size: 17px; font-weight: bold; margin-top: 10px; }
+        button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+        #status { margin-top: 15px; font-weight: bold; font-size: 14px; }
+        .success-msg { color: #2e7d32; }
+        .success-msg h1 { font-size: 40px; margin-bottom: 10px; }
+        .success-msg p { font-size: 18px; color: #333; line-height: 1.5; }
+        /* Saacadda tiri xisaabta (Countdown) */
+        #timer { font-size: 12px; color: #999; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div id="successOverlay">
-    <h1 style="font-size: 50px;">✅</h1>
-    <h1 id="successTitle">MAHADSANID!</h1>
-    <p id="successBody" style="font-size: 20px;"></p>
-    <button onclick="location.reload()" style="background: white; color: #007bff; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">DIB U NOQO</button>
-</div>
-
 <div class="container" id="mainContainer">
-    <h2 id="schName">AL XIKMA SCHOOL</h2>
-    <p style="color: #666;">Is-xaadirinta Darawalada</p>
+    <img src="10754.jpg" alt="Logo" class="logo">
+    
+    <h2 id="displaySchoolName">AL XIKMA SCHOOL</h2>
+    <p>Xaadirinta Darawalada</p>
 
-    <select id="nameSelect"><option value="">-- Sugaya Magacyada... --</option></select>
+    <select id="nameSelect">
+        <option value="">-- Sugaya Magacyada... --</option>
+    </select>
+
     <select id="shiftSelect">
         <option value="">-- Dooro Xaaladda --</option>
-        <option value="subax Imaansho">Subax Imaansho</option>
-        <option value="rawixitaan Subax">Rawixitaan Subax</option>
-        <option value="galab Imaansho">Galab Imaansho</option>
-        <option value="rawixitaan Galab">Rawixitaan Galab</option>
+        <option value="subax imaansho">Subax Imaansho</option>
+        <option value="subax bixitaan">Subax Bixitaan</option>
+        <option value="galab imaansho">Galab Imaansho</option>
+        <option value="galab bixitaan">Galab Bixitaan</option>
     </select>
-    <input type="password" id="passInput" placeholder="Password-kaaga">
-    <button id="submitBtn" class="submit-btn" disabled>Hubinta GPS...</button>
-    <div id="status">Raadinaya goobta aad joogto...</div>
+
+    <input type="password" id="passInput" placeholder="Gali Password-kaaga">
+
+    <button id="submitBtn" class="btn submit-btn" disabled>Hubinta Goobta...</button>
+    <div id="status">Sugaya GPS-ka iyo Settings...</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // URL-ka hoose waa kan Firebase-ka Basaska ee aad sawirka ku soo dirtay
-    const firebaseConfig = { databaseURL: "https://xaadirinta-dareewalada-default-rtdb.firebaseio.com" };
+    // URL-ka Firebase-ka Darawalada
+    const firebaseConfig = {
+        databaseURL: "https://xaadirinta-dareewalada-default-rtdb.firebaseio.com"
+    };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
+    
+    let TEACHER_DB = {}; 
     let SETTINGS = {};
-    let DRIVER_DB = {};
 
-    // 1. Akhriso Settings-ka
-    db.ref('settings_bus').on('value', (snap) => {
-        SETTINGS = snap.val() || {};
-        document.getElementById('schName').innerText = SETTINGS.school_name || "AL XIKMA SCHOOL";
-    });
-
-    // 2. Akhriso Magacyada
-    db.ref('staff_list').on('value', (snap) => {
-        DRIVER_DB = snap.val() || {};
-        const nameSelect = document.getElementById('nameSelect');
-        nameSelect.innerHTML = '<option value="">-- Dooro Magacaaga --</option>';
-        for (let n in DRIVER_DB) {
-            let opt = document.createElement('option');
-            opt.value = n; opt.text = n; nameSelect.appendChild(opt);
+    db.ref('settings_bus').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            SETTINGS = data;
+            document.getElementById('displaySchoolName').innerText = SETTINGS.school_name || "AL XIKMA SCHOOL";
+            startGPSWatch();
         }
     });
 
-    // 3. GPS & Location
-    navigator.geolocation.watchPosition((pos) => {
-        const R = 6371;
-        const lat1 = pos.coords.latitude, lon1 = pos.coords.longitude;
-        const dLat = (SETTINGS.lat - lat1) * Math.PI / 180;
-        const dLon = (SETTINGS.lon - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(SETTINGS.lat*Math.PI/180) * Math.sin(dLon/2)**2;
-        const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-        const btn = document.getElementById('submitBtn');
-        const st = document.getElementById('status');
-
-        if (dist <= (SETTINGS.radius || 0.2)) {
-            btn.disabled = false; btn.innerText = "IS-XAADIRI";
-            st.innerHTML = "<span style='color: green;'>✅ Goobta waa sax.</span>";
-        } else {
-            btn.disabled = true;
-            st.innerHTML = "<span style='color: red;'>❌ Ma joogtid iskuulka (" + (dist*1000).toFixed(0) + "m).</span>";
+    db.ref('staff_list').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            TEACHER_DB = data;
+            const nameSelect = document.getElementById('nameSelect');
+            nameSelect.innerHTML = '<option value="">-- Dooro Magacaaga --</option>';
+            Object.keys(data).sort().forEach(name => {
+                nameSelect.innerHTML += `<option value="${name}">${name}</option>`;
+            });
         }
-    }, null, { enableHighAccuracy: true });
+    });
 
-    // 4. Dirista - Halkan waxaa ku jira galka 'drivers'
+    function parseTime(t) {
+        if (!t) return 0;
+        let timeStr = String(t);
+        if (timeStr.includes("T")) {
+            timeStr = timeStr.split("T")[1];
+        }
+        const parts = timeStr.split(':');
+        const h = parseInt(parts[0]) || 0;
+        const m = parseInt(parts[1]) || 0;
+        return h * 60 + m;
+    }
+
+    function startGPSWatch() {
+        navigator.geolocation.watchPosition((pos) => {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            const shift = document.getElementById('shiftSelect').value.toLowerCase();
+            
+            const R = 6371; 
+            const lat1 = pos.coords.latitude, lon1 = pos.coords.longitude;
+            const dLat = (SETTINGS.lat - lat1) * Math.PI / 180;
+            const dLon = (SETTINGS.lon - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(SETTINGS.lat*Math.PI/180) * Math.sin(dLon/2)**2;
+            const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            const status = document.getElementById('status');
+            const submitBtn = document.getElementById('submitBtn');
+
+            let timeStatusMsg = "";
+            let canSubmit = true;
+
+            if (String(SETTINGS.time_limit_on).toLowerCase() === "true" && shift !== "") {
+                let start, end;
+                
+                if (shift === "subax imaansho") {
+                    start = parseTime(SETTINGS.morn_start);
+                    end = parseTime(SETTINGS.morn_end);
+                } else if (shift === "subax bixitaan") {
+                    start = parseTime(SETTINGS.morn_out_start);
+                    end = parseTime(SETTINGS.morn_out_end);
+                } else if (shift === "galab imaansho") {
+                    start = parseTime(SETTINGS.aft_start);
+                    end = parseTime(SETTINGS.aft_end);
+                } else if (shift === "galab bixitaan") {
+                    start = parseTime(SETTINGS.aft_out_start);
+                    end = parseTime(SETTINGS.aft_out_end);
+                }
+
+                if (currentTime < start) {
+                    timeStatusMsg = "❌ Lama gaarin waqtigii " + shift + ".";
+                    canSubmit = false;
+                } else if (currentTime > end) {
+                    timeStatusMsg = "❌ Waa la soo dhaafay waqtigii " + shift + ".";
+                    canSubmit = false;
+                }
+            }
+
+            if (!canSubmit) {
+                status.innerText = timeStatusMsg;
+                status.style.color = "orange";
+                submitBtn.disabled = true;
+                submitBtn.innerText = "WAA XIRAN YAHAY";
+            } else if (dist <= SETTINGS.radius) {
+                status.innerText = "✅ Hadda iskuulka waad joogtaa .";
+                status.style.color = "green";
+                submitBtn.disabled = false;
+                submitBtn.innerText = "XAADIRI";
+            } else {
+                status.innerText = (SETTINGS.msg_far || "Ma joogtid iskuulka fadlan marka hore iskuulka tag") + " (" + (dist*1000).toFixed(0) + "m).";
+                status.style.color = "red";
+                submitBtn.disabled = true;
+                submitBtn.innerText = "HUBINTA GOOBTA...";
+            }
+        }, null, { enableHighAccuracy: true });
+    }
+
     document.getElementById('submitBtn').addEventListener('click', () => {
         const name = document.getElementById('nameSelect').value;
         const shift = document.getElementById('shiftSelect').value;
         const pass = document.getElementById('passInput').value;
 
-        if (!name || !shift || !pass) return alert("Buuxi dhamaan!");
-        if (!DRIVER_DB[name] || DRIVER_DB[name].pass !== pass) return alert("Password khaldan!");
+        if (!name || !shift || !pass) return alert("Fadlan buuxi dhamaan khaanadaha!");
+        if (!TEACHER_DB[name] || String(TEACHER_DB[name].pass) !== String(pass)) return alert("Password-ku waa khaldan yahay!");
 
-        // Is-xaadirintu waxay ku dhacaysaa galka 'drivers' ee Firebase
-        db.ref('drivers').push({
-            name: name, shift: shift,
-            email: DRIVER_DB[name].email,
-            time: firebase.database.ServerValue.TIMESTAMP
-        }).then(() => {
-            document.getElementById('successBody').innerHTML = "Darawal <b>" + name + "</b>, waad ku mahadsantahay is-xaadirinta.";
-            document.getElementById('successOverlay').style.display = "flex";
-            setTimeout(() => { location.reload(); }, 10000);
+        const maanta = new Date().toLocaleDateString('en-GB');
+
+        // Halkan waxaa loo beddelay 'drivers'
+        db.ref('drivers').orderByChild('name').equalTo(name).once('value', (snapshot) => {
+            let horay_u_jiray = false;
+            snapshot.forEach((child) => {
+                const record = child.val();
+                const recordDate = new Date(record.time).toLocaleDateString('en-GB');
+                if (record.shift === shift && recordDate === maanta) horay_u_jiray = true;
+            });
+
+            if (horay_u_jiray) {
+                alert("❌ Hore ayaad isugu xaadirisay " + shift + " maanta hal mar ayaa laguu ogol yahay maalintii!");
+            } else {
+                const newRecordRef = db.ref('drivers').push();
+                const uniqueId = newRecordRef.key;
+
+                newRecordRef.set({
+                    name: name,
+                    email: TEACHER_DB[name].email || "",
+                    shift: shift,
+                    time: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    document.getElementById('mainContainer').innerHTML = `
+                        <div class="success-msg">
+                            <h1 id="status-icon">⏳</h1>
+                            <p><strong>Mudane Darawal ${name}</strong></p>
+                            <p id="dynamic-msg">Fariintaada waa la xisaabinayaa...</p>
+                            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                            <p style="font-size: 12px; color: #666;">${SETTINGS.footer_text || ""}</p>
+                            <p id="timer">Boggu wuxuu iskiis u xirmi doonaa...</p>
+                        </div>`;
+
+                    db.ref('drivers/' + uniqueId).on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data && data.display_msg) {
+                            document.getElementById('dynamic-msg').innerHTML = `<b>${data.display_msg}</b>`;
+                            document.getElementById('status-icon').innerHTML = "✅";
+                        }
+                    });
+
+                    setTimeout(() => { location.reload(); }, 300000); 
+                });
+            }
         });
     });
 </script>
